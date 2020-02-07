@@ -25,15 +25,17 @@ var budgetController = (function(){
    
    return {
        addItem: function(type, des, val){
-           var newItem, ID;
+           var newItem, ID, getId;
            
            if(type === 'exp'){
                newItem = new Expense(ID, des, val)
            }else if(type === 'inc'){
                newItem = new Income(ID, des, val)
            }
+           //bug here
+           getId = data.allItems[type].length;
            if(data.allItems[type].length > 0){
-               ID = data.allItems[type][data.allItems[type].length].id + 1;
+               ID = data.allItems[type][data.allItems[type].length].ID + 1;
            }else{
                ID = 0;
            }
@@ -44,7 +46,7 @@ var budgetController = (function(){
            
        },
        testing: function(){
-           console.log(data.allItems)
+           console.log()
        }
    }
 })()
@@ -85,7 +87,7 @@ var UIController = (function(){
                 
             }
             
-            newItem = html.replace('%id%', obj.ID)
+            newItem = html.replace('%id%', obj.id)
             newItem = newItem.replace('%description%', obj.des)
             newItem = newItem.replace('%value%', obj.val)
             
