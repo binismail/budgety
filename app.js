@@ -1,14 +1,14 @@
 var budgetController = (function(){
-   var Expense = function(id, des, val){
+   var Expense = function(id, description, value){
        this.id = id;
-       this.des = des;
-       this.val = val;
+       this.description = description;
+       this.value = value;
    }
    
-   var Income = function(id, des, val){
+   var Income = function(id, description, value){
        this.id = id;
-       this.des = des;
-       this.val = val;
+       this.description = description;
+       this.value = value;
    }
    
    var data = {
@@ -25,30 +25,26 @@ var budgetController = (function(){
    
    return {
        addItem: function(type, des, val){
-           var newItem, ID, getId;
-           
-           if(type === 'exp'){
-               newItem = new Expense(ID, des, val)
-           }else if(type === 'inc'){
-               newItem = new Income(ID, des, val)
-           }
-           //bug here
-           getId = data.allItems[type].length;
-           if(data.allItems[type].length > 0){
-               ID = data.allItems[type][data.allItems[type].length].ID + 1;
-           }else{
-               ID = 0;
-           }
-           
-           
-           data.allItems[type].push(newItem)
-           return newItem;
-           
-       },
-       testing: function(){
-           console.log()
-       }
-   }
+        if (data.allItems[type].length > 0) {
+            ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+        } else {
+            ID = 0;
+        }
+        
+        // Create new item based on 'inc' or 'exp' type
+        if (type === 'exp') {
+            newItem = new Expense(ID, des, val);
+        } else if (type === 'inc') {
+            newItem = new Income(ID, des, val);
+        }
+        
+        // Push it into our data structure
+        data.allItems[type].push(newItem);
+        
+        // Return the new element
+        return newItem;
+    }
+}
 })()
 
 
@@ -60,7 +56,7 @@ var UIController = (function(){
         value: '.add__value',
         button: '.add__btn',
         incomeContainer: '.income__list',
-        expenseContainer: '.expense__list'
+        expenseContainer: '.expenses__list'
     };
 
     return {
@@ -83,13 +79,13 @@ var UIController = (function(){
             }else if(type === 'exp'){
 //                do something
                 element = DOMStrings.expenseContainer
-                '  <div class="item clearfix" id="%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+                html = ' <div class="item clearfix" id="%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
                 
             }
             
             newItem = html.replace('%id%', obj.id)
-            newItem = newItem.replace('%description%', obj.des)
-            newItem = newItem.replace('%value%', obj.val)
+            newItem = newItem.replace('%description%', obj.description)
+            newItem = newItem.replace('%value%', obj.value)
             
             document.querySelector(element).insertAdjacentHTML('beforeend', newItem)
         },
