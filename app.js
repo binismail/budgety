@@ -89,14 +89,14 @@ var UIController = (function(){
             
             document.querySelector(element).insertAdjacentHTML('beforeend', newItem)
         },
-
+        // will need to fix some bug here tomorrow
         clearfields: function(){
             var fields, fieldsArr;
 
             fields = document.querySelector(DOMStrings.description + ', ' + DOMStrings.value);
 
             fieldsArr = Array.prototype.slice.call(fields);
-            // a little bug here am trying to fix
+            // a little bug here am trying to fix here 
             fieldsArr.forEach(function(current){
                 current.value = "";
             })
@@ -126,13 +126,14 @@ var controller = (function(budgetCtrl, UIctrl){
         
     }
     var updateBudget = function(){
-        
+
     }
     var addItemController = function(){
         var inputs, items;
 //   get input values
          inputs = UIctrl.getInput();
 //   add new item to data structure
+    // working perfectly now although i fixed the bug
         if(inputs.addDescription !== "" && !isNaN(inputs.addValue) && inputs.addValue > 0){
         items = budgetCtrl.addItem(inputs.addType, inputs.addDescription, inputs.addValue)
 //   add item to the UI
