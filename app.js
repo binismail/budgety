@@ -91,15 +91,16 @@ var UIController = (function(){
         },
 
         clearfields: function(){
-            var fields, fieldsarr,
+            var fields, fieldsArr;
 
-            fields = document.querySelector(DOMStrings.description + ',' + DOMStrings.value);
+            fields = document.querySelector(DOMStrings.description + ', ' + DOMStrings.value);
 
-            fieldsarr = Array.prototype.slice.call(fields);
-
-            fieldsarr.forEach(function(cur, ind, arr){
-                cur.value = "";
+            fieldsArr = Array.prototype.slice.call(fields);
+            // a little bug here am trying to fix
+            fieldsArr.forEach(function(current){
+                current.value = "";
             })
+            fieldsArr[0].focus()
         },
         
         DOMItem : function(){
