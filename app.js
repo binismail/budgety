@@ -10,6 +10,15 @@ var budgetController = (function(){
        this.description = description;
        this.value = value;
    }
+
+   var calculateTotal = function(type){
+    var sum = 0;
+        
+    data.allItems[type].forEach(function(cur){
+        sum+= cur.value
+    })
+    data.totals[type] = sum;
+   }
    
    var data = {
        allItems: {
@@ -20,7 +29,11 @@ var budgetController = (function(){
        totals: {
            exp: 0,
            inc: 0 
-       }
+       },
+
+       budget:0,
+
+       percentage: -1
    }
    
    return {
@@ -43,6 +56,28 @@ var budgetController = (function(){
         
         // Return the new element
         return newItem;
+    },
+    calculateBudget: function(){
+
+        calculateTotal('inc')
+        calculateTotal('exp')
+
+        data.budget = data.totals.inc / data.totals.exp;
+        data.percentage = Math.round((data.totals.inc / data.totals.exp) * 100)
+
+    }, 
+
+    getBudget: function(){
+        return {
+            budget: data.budget,
+            totalInc: data.totals.inc,
+            totalExp: data.totals.exp,
+            percent: data.percentage
+        }
+    }, 
+
+    testing: function(){
+        console.log(data);
     }
 }
 })()
@@ -89,11 +124,11 @@ var UIController = (function(){
             
             document.querySelector(element).insertAdjacentHTML('beforeend', newItem)
         },
-        // will need to fix some bug here tomorrow
+        // cleared out the bug
         clearfields: function(){
             var fields, fieldsArr;
 
-            fields = document.querySelector(DOMStrings.description + ', ' + DOMStrings.value);
+            fields = document.querySelectorAll(DOMStrings.description + ', ' + DOMStrings.value);
 
             fieldsArr = Array.prototype.slice.call(fields);
             // a little bug here am trying to fix here 
@@ -126,11 +161,17 @@ var controller = (function(budgetCtrl, UIctrl){
         
     }
     var updateBudget = function(){
+        budgetCtrl.calculateBudget();
+
+        var budget = budgetCtrl.getBudget();
+
+        console.log(budget);
 
     }
     var addItemController = function(){
         var inputs, items;
 //   get input values
+            
          inputs = UIctrl.getInput();
 //   add new item to data structure
     // working perfectly now although i fixed the bug
@@ -141,6 +182,8 @@ var controller = (function(budgetCtrl, UIctrl){
 
 //   clearing out input fields
         UIctrl.clearfields();
+
+        updateBudget()
         }
 //   calculate the budget
 //   update the UI
@@ -149,6 +192,7 @@ var controller = (function(budgetCtrl, UIctrl){
         init: function(){
             setUpEventListners();
             console.log('application has started.')
+            updateBudget();
         }
     }
    
