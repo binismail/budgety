@@ -15,7 +15,7 @@ var budgetController = (function(){
     var sum = 0;
         
     data.allItems[type].forEach(function(cur){
-        sum+= cur.value
+        sum = sum + cur.value;
     })
     data.totals[type] = sum;
    }
@@ -62,8 +62,10 @@ var budgetController = (function(){
         calculateTotal('inc')
         calculateTotal('exp')
 
-        data.budget = data.totals.inc / data.totals.exp;
-        data.percentage = Math.round((data.totals.inc / data.totals.exp) * 100)
+        data.budget = data.totals.inc - data.totals.exp;
+        if(data.percentage > 0){
+        data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100)
+        }
 
     }, 
 
@@ -91,7 +93,12 @@ var UIController = (function(){
         value: '.add__value',
         button: '.add__btn',
         incomeContainer: '.income__list',
-        expenseContainer: '.expenses__list'
+        expenseContainer: '.expenses__list',
+        budget: '.budget__value',
+        budgetInc: '.budget__income--value',
+        budgetExp: '.budget__expenses--value',
+        budgetPercent: '.budget__expenses--percentage'
+
     };
 
     return {
@@ -102,6 +109,17 @@ var UIController = (function(){
                 addValue: parseFloat(document.querySelector(DOMStrings.value).value)
             };
                      
+        },
+
+        addValue: function(obj){
+                document.querySelector(DOMStrings.budget).textContent =  obj.budget;
+                document.querySelector(DOMStrings.budgetInc).textContent = obj.totalInc;
+                document.querySelector(DOMStrings.budgetExp).textContent = obj.totalExp;
+                if(obj.percentage > 0){
+                    document.querySelector(DOMStrings.budgetPercent).textContent = obj.percentage + '%';
+                }
+               
+
         },
         
         addListItem: function(obj, type){
@@ -165,6 +183,8 @@ var controller = (function(budgetCtrl, UIctrl){
 
         var budget = budgetCtrl.getBudget();
 
+        UIctrl.addValue(budget)
+
         console.log(budget);
 
     }
@@ -184,6 +204,7 @@ var controller = (function(budgetCtrl, UIctrl){
         UIctrl.clearfields();
 
         updateBudget()
+
         }
 //   calculate the budget
 //   update the UI
