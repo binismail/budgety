@@ -63,10 +63,10 @@ var budgetController = (function(){
         calculateTotal('exp')
 
         data.budget = data.totals.inc - data.totals.exp;
-        if(data.percentage > 0){
+        if(data.totals.inc > 0){
         data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100)
         }else {
-            0;
+            data.percentage = -1;
         }
 
     }, 
@@ -117,8 +117,10 @@ var UIController = (function(){
                 document.querySelector(DOMStrings.budget).textContent =  obj.budget;
                 document.querySelector(DOMStrings.budgetInc).textContent = obj.totalInc;
                 document.querySelector(DOMStrings.budgetExp).textContent = obj.totalExp;
-                if(obj.percentage > 0){
-                    document.querySelector(DOMStrings.budgetPercent).textContent = obj.percentage + '%';
+                if(obj.percent > 0){
+                    document.querySelector(DOMStrings.budgetPercent).textContent = obj.percent + '%';
+                }else{
+                    document.querySelector(DOMStrings.budgetPercent).textContent = '--'
                 }
                
 
